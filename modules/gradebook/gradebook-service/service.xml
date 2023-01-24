@@ -12,7 +12,7 @@
 
 		<!-- Group instance -->
 
-		<column name="groupId" type="long" />
+		<column name="GroupId" type="long" />
 
 		<!-- Audit fields -->
 
