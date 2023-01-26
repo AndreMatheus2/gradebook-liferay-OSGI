@@ -59,6 +59,15 @@ public class AssignmentLocalServiceUtil {
 		return getService().addAssignment(assignment);
 	}
 
+	public static Assiginment addAssignment(
+			long groupId, String title, String description, Date dueDate,
+			ServicContext servicContext)
+		throws PortalException {
+
+		return getService().addAssignment(
+			groupId, title, description, dueDate, servicContext);
+	}
+
 	/**
 	 * Creates a new assignment with the primary key. Does not add the assignment to the database.
 	 *
@@ -226,6 +235,38 @@ public class AssignmentLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getAssignment(assignment);
+	}
+
+	public static List<Assignment> getAssignmentByGroupId(long groupId) {
+		return getService().getAssignmentByGroupId(groupId);
+	}
+
+	public static List<Assignment> getAssignmentByGroupId(
+		long groupId, int start, int end) {
+
+		return getService().getAssignmentByGroupId(groupId, start, end);
+	}
+
+	public static List<Assignment> getAssignmentByGroupId(
+		long groupId, int start, int end,
+		OrderByComparator<Assignment> orderByComparator) {
+
+		return getService().getAssignmentByGroupId(
+			groupId, start, end, orderByComparator);
+	}
+
+	public static List<Assignment> getAssignmentByKeywords(
+		long groupId, String keywords, int start, int end,
+		OrderByComparator<Assignment> orderByComparator) {
+
+		return getService().getAssignmentByKeywords(
+			groupId, keywords, start, end, orderByComparator);
+	}
+
+	public static Long getAssignmentCountByKeywords(
+		long groupId, String keywords) {
+
+		return getService().getAssignmentCountByKeywords(groupId, keywords);
 	}
 
 	/**

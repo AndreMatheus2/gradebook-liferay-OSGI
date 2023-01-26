@@ -75,6 +75,11 @@ public interface AssignmentLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Assignment addAssignment(Assignment assignment);
 
+	public Assiginment addAssignment(
+			long groupId, String title, String description, Date dueDate,
+			ServicContext servicContext)
+		throws PortalException;
+
 	/**
 	 * Creates a new assignment with the primary key. Does not add the assignment to the database.
 	 *
@@ -211,6 +216,26 @@ public interface AssignmentLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Assignment getAssignment(long assignment) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentByGroupId(long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentByGroupId(
+		long groupId, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentByGroupId(
+		long groupId, int start, int end,
+		OrderByComparator<Assignment> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentByKeywords(
+		long groupId, String keywords, int start, int end,
+		OrderByComparator<Assignment> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Long getAssignmentCountByKeywords(long groupId, String keywords);
 
 	/**
 	 * Returns a range of all the assignments.

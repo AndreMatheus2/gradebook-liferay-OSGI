@@ -53,6 +53,16 @@ public class AssignmentLocalServiceWrapper
 		return _assignmentLocalService.addAssignment(assignment);
 	}
 
+	@Override
+	public Assiginment addAssignment(
+			long groupId, String title, String description, Date dueDate,
+			ServicContext servicContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _assignmentLocalService.addAssignment(
+			groupId, title, description, dueDate, servicContext);
+	}
+
 	/**
 	 * Creates a new assignment with the primary key. Does not add the assignment to the database.
 	 *
@@ -253,6 +263,51 @@ public class AssignmentLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _assignmentLocalService.getAssignment(assignment);
+	}
+
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentByGroupId(long groupId) {
+
+		return _assignmentLocalService.getAssignmentByGroupId(groupId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentByGroupId(long groupId, int start, int end) {
+
+		return _assignmentLocalService.getAssignmentByGroupId(
+			groupId, start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentByGroupId(
+			long groupId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.andre.gradebook.model.Assignment>
+					orderByComparator) {
+
+		return _assignmentLocalService.getAssignmentByGroupId(
+			groupId, start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentByKeywords(
+			long groupId, String keywords, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.andre.gradebook.model.Assignment>
+					orderByComparator) {
+
+		return _assignmentLocalService.getAssignmentByKeywords(
+			groupId, keywords, start, end, orderByComparator);
+	}
+
+	@Override
+	public Long getAssignmentCountByKeywords(long groupId, String keywords) {
+		return _assignmentLocalService.getAssignmentCountByKeywords(
+			groupId, keywords);
 	}
 
 	/**

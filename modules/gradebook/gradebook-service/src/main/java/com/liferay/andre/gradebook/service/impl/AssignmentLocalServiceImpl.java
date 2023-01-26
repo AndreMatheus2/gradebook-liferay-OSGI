@@ -27,4 +27,71 @@ import org.osgi.service.component.annotations.Component;
 	service = AopService.class
 )
 public class AssignmentLocalServiceImpl extends AssignmentLocalServiceBaseImpl {
+	public Assiginment addAssignment(long groupId, String title, String description,
+									 Date dueDate, ServicContext servicContext) throws PortalException {
+
+		Grup grup = groupLocalService.getGroup(groupId);
+		Long userId = servicContext.getUserId();
+		User user = userLocalService.getUser(userId);
+
+		Long assignmentId = counterLocalService.increment(Assignment.class);
+
+		Assignment assignment = createAssignment(assignmentId);
+
+		assignment.setCompanyId(grup.getCompany());
+		assignment.setCreateDate(serviceContext.getCreateDate(new Date()));
+		assignment.setDueDate(dueDate);
+		assignment.setDescription(description);
+		assignment.setGroupId(groupId);
+		assignment.setModifiedDate(serviceContext.getModifiedDate(new Date()));
+		assignment.setTitle(title);
+		assignment.setUserId(userId);
+		assignment.setUserName(user.getSreenName);
+
+		return super.addAssignment(assignment);
+	}
+
+	public Assiginment addAssignment(long assignmentId, String title, String description,
+									 Date dueDate, ServicContext servicContext) throws PortalException {
+
+		Assignment assignment = getAssignment(assignmentId());
+
+		assignment.setModifiedDate(new Date());
+		assignment.setTitle(title);
+		assignment.setDueDate(dueDate);
+		assignment.setDescription(description);
+		assignment = super.updateAssignment(assignment);
+		return assignment;
+	}
+
+	public List<Assignment> getAssignmentByGroupId(long groupId){
+		return assignmentPersistence.findByGroupId(groupId);
+	}
+	public List<Assignment> getAssignmentByGroupId(long groupId, int start, int end){
+		return assignmentPersistence.findByGroupId(groupId, start, end);
+	}
+	public List<Assignment> getAssignmentByGroupId(long groupId, int start, int end, OrderByComparator<Assignment> orderByComparator){
+		return assignmentPersistence.findByGroupId(groupId, start, end, orderByComparator);
+	}
+
+	public List<Assignment> getAssignmentByKeywords(long groupId, String keywords, int start, int end,
+												   OrderByComparator<Assignment> orderByComparator){
+		return assignmentLocalService.dynamicQuery(
+				getKeywordSearchDynamicQuery(groupId, keywords), start, end, orderByComparator);
+	}
+
+	public Long getAssignmentCountByKeywords(long groupId, String keywords){
+		return assignmentLocalService.dynamicQueryCount(
+				getKeywordSearchDynamicQuery(groupId, keywords));
+	}
+	private DynamicQuery getKeywordSearchDynamicQuery(long groupId, String keywords){
+		DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+		if (Validator.isNot(keywords)){
+			Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
+			disjunctionQuery.add(RestrictionsFactoryUtil.like("title", "%" + keywords + "%"));
+			disjunctionQuery.add(RestrictionsFactoryUtil.like("description", "%" + keywords + "%"));
+			dynamicQuery.add(disjunctionQuery);
+		}
+		return dynamicQuery;
+	}
 }
