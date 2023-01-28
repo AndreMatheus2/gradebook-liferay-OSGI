@@ -78,7 +78,7 @@ Date dueDate, ServiceContext serviceContext) throws PortalException {
 		return super.addAssignment(assignment);
 	}
 	public Assignment updateAssignment(long assignmentId, Map<Locale, String> titleMap,
-									   String description, Date dueDate, ServiceContext serviceContext) throws PortalException {
+									   String description, Date dueDate, ServiceContext serviceContext) throws PortalExceptio {
 // Validate assignment parameters.
 _assignmentValidator.validate(titleMap, description, dueDate);
 	// Get the Assignment by id.
