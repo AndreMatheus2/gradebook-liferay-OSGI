@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -75,9 +77,9 @@ public interface AssignmentLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Assignment addAssignment(Assignment assignment);
 
-	public Assiginment addAssignment(
+	public Assignment addAssignment(
 			long groupId, String title, String description, Date dueDate,
-			ServicContext servicContext)
+			ServiceContext serviceContext)
 		throws PortalException;
 
 	/**
@@ -289,5 +291,10 @@ public interface AssignmentLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public Assignment updateAssignment(Assignment assignment);
+
+	public Assignment updateAssignment(
+			long assignmentId, String title, String description, Date dueDate,
+			ServiceContext servicContext)
+		throws PortalException;
 
 }

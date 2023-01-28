@@ -5,10 +5,10 @@ URL. --%>
 <portlet:param name="redirect" value="${currentURL}" />
 <portlet:param name="assignmentId" value="${entry.assignmentId}" />
 </portlet:renderURL>
-<c:choose><%-- Descriptive (list) view --%>
+<c:choose>
+<%-- Descriptive (list) view --%>
 <c:when
-test='${assignmentsManagementToolbarDisplayContext.getDisplayStyle().equals("de
-<%-- User --%>
+test='${assignmentsManagementToolbarDisplayContext.getDisplayStyle().equals("de<%-- User --%>
 <liferay-ui:search-container-column-user
 showDetails="<%=false%>"
 userId="<%=entry.getUserId()%>"
@@ -27,34 +27,34 @@ key="x-modified-x-ago" />
 </h5>
 <h4>
 <aui:a href="${viewAssignmentURL}">
-${entry.title}
-</aui:a></h4>
+${entry.getTitle(locale)}
+</aui:a>
+</h4>
 </liferay-ui:search-container-column-text>
 <liferay-ui:search-container-column-jsp
-path="/assignment/entry_actions.jsp" />
-</c:when>
+path="/assignment/entry_actions.jsp" /></c:when>
 <%-- Card view
 --%>
 <c:when
 test='${assignmentsManagementToolbarDisplayContext.getDisplayStyle().equals("ic
-<%--
+<%
 row.setCssClass("lfr-asset-item");
---%>
+%>
 <liferay-ui:search-container-column-text>
 <%-- Vertical card. --%>
 <liferay-frontend:icon-vertical-card
 actionJsp="/assignment/entry_actions.jsp"
 actionJspServletContext="<%= application %>"
 icon="cards2" resultRow="${row}"
-title="${entry.title}"
+title="${entry.getTitle(locale)}"
 url="${viewAssignmentURL}">
 <liferay-frontend:vertical-card-sticker-bottom>
 <liferay-ui:user-portrait
-cssClass="sticker sticker-bottom"userId="${entry.userId}"
+cssClass="sticker sticker-bottom"
+userId="${entry.userId}"
 />
 </liferay-frontend:vertical-card-sticker-bottom>
-<liferay-frontend:vertical-card-footer>
-<div class="truncate-text">
+<liferay-frontend:vertical-card-footer><div class="truncate-text">
 <%-- Strip HTML --%>
 <%=HtmlUtil.stripHtml(entry.getDescription())
 </div>
@@ -67,17 +67,17 @@ cssClass="sticker sticker-bottom"userId="${entry.userId}"
 <liferay-ui:search-container-column-text
 href="${viewAssignmentURL}"
 name="title"
-value="<%= entry.getTitle() %>"
+value="<%= entry.getTitle(locale) %>"
 />
 <liferay-ui:search-container-column-user
 name="author"
 userId="${entry.userId}"
-/><liferay-ui:search-container-column-date
+/>
+<liferay-ui:search-container-column-date
 name="create-date"
 property="createDate"
 />
-<liferay-ui:search-container-column-jsp
-name="actions"
+<liferay-ui:search-container-column-jspname="actions"
 path="/assignment/entry_actions.jsp"
 />
 </c:otherwise>

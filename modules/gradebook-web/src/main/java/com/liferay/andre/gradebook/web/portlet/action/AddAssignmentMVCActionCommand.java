@@ -1,12 +1,10 @@
 package com.liferay.andre.gradebook.web.portlet.action;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.servlet.SessionErrors;import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -17,8 +15,7 @@ import com.liferay.andre.gradebook.model.Assignment;
 import com.liferay.andre.gradebook.service.AssignmentService;
 import com.liferay.andre.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.andre.gradebook.web.constants.MVCCommandNames;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Date;import java.util.Locale;
 import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -33,7 +30,8 @@ import org.osgi.service.component.annotations.Reference;
         immediate = true,
         property = {
                 "javax.portlet.name=" + GradebookPortletKeys.GRADEBOOK,
-                "mvc.command.name=" + MVCCommandNames.ADD_ASSIGNMENT},
+                "mvc.command.name=" + MVCCommandNames.ADD_ASSIGNMENT
+        },
         service = MVCActionCommand.class
 )
 public class AddAssignmentMVCActionCommand extends BaseMVCActionCommand {
@@ -42,34 +40,30 @@ public class AddAssignmentMVCActionCommand extends BaseMVCActionCommand {
             ActionRequest actionRequest, ActionResponse actionResponse)
             throws Exception {
         ThemeDisplay themeDisplay =
-                (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-        ServiceContext serviceContext = ServiceContextFactory.getInstance(
+                (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);ServiceContext serviceContext = ServiceContextFactory.getInstance(
                 Assignment.class.getName(), actionRequest);
 // Get parameters from the request.
-        String title = ParamUtil.getString(actionRequest, "title");
-        String description = ParamUtil.getString(actionRequest, "descri
-                Date dueDate = ParamUtil.getDate(actionRequest, "dueDate", null);
+// Use LocalizationUtil to get a localized parameter.
+        Map<Locale, String> titleMap =
+                LocalizationUtil.getLocalizationMap(actionRequest, "title");
+        String description = ParamUtil.getString(actionRequest, "description", null);
+        Date dueDate = ParamUtil.getDate(actionRequest, "dueDate", null);
         try {
 // Call the service to add a new assignment.
             _assignmentService.addAssignment(
-                    themeDisplay.getScopeGroupId(), title, description, dueDate, se
-// Set the success message.SessionMessages.add(actionRequest, "assignmentAdded");
+                    themeDisplay.getScopeGroupId(), titleMap, description, dueDate,
                     sendRedirect(actionRequest, actionResponse);
         }
         catch (AssignmentValidationException ave) {
-// Get error messages from the service layer.
-            ave.getErrors().forEach(key -> SessionErrors.add(actionRequest, key));
             ave.printStackTrace();
             actionResponse.setRenderParameter(
                     "mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT);
         }
-        catch (PortalException pe) {
-// Set error messages from the service layer.
-            SessionErrors.add(actionRequest, "serviceErrorDetails", pe);
-            pe.printStackTrace();
+        catch (PortalException pe) {pe.printStackTrace();
             actionResponse.setRenderParameter(
                     "mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT);
         }
     }
-    @Referenceprotected AssignmentService _assignmentService;
+    @Reference
+    protected AssignmentService _assignmentService;
 }

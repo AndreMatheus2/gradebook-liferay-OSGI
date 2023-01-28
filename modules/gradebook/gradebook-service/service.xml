@@ -23,6 +23,7 @@
 		<column name="modifiedDate" type="Date" />
 		<column name="description" type="String" />
 		<column name="dueDate" type="Date" />
+		<column name="title" type="String" localized="true"></column>
 
 		<!-- Order -->
 

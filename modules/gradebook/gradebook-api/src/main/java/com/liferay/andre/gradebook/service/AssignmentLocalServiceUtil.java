@@ -59,13 +59,14 @@ public class AssignmentLocalServiceUtil {
 		return getService().addAssignment(assignment);
 	}
 
-	public static Assiginment addAssignment(
-			long groupId, String title, String description, Date dueDate,
-			ServicContext servicContext)
+	public static Assignment addAssignment(
+			long groupId, String title, String description,
+			java.util.Date dueDate,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().addAssignment(
-			groupId, title, description, dueDate, servicContext);
+			groupId, title, description, dueDate, serviceContext);
 	}
 
 	/**
@@ -330,6 +331,16 @@ public class AssignmentLocalServiceUtil {
 	 */
 	public static Assignment updateAssignment(Assignment assignment) {
 		return getService().updateAssignment(assignment);
+	}
+
+	public static Assignment updateAssignment(
+			long assignmentId, String title, String description,
+			java.util.Date dueDate,
+			com.liferay.portal.kernel.service.ServiceContext servicContext)
+		throws PortalException {
+
+		return getService().updateAssignment(
+			assignmentId, title, description, dueDate, servicContext);
 	}
 
 	public static AssignmentLocalService getService() {
