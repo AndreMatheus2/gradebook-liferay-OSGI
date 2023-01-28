@@ -1,6 +1,11 @@
 Bundle-Name: gradebook-api
 Bundle-SymbolicName: com.liferay.andre.gradebook.api
 Bundle-Version: 1.0.0
-Liferay-Require-SchemaVersion: 1.0.0
-Liferay-Service: true
--dsannotations-options: inherit
+Export-Package:\
+com.liferay.andre.gradebook.exception,\
+com.liferay.andre.gradebook.model,\
+com.liferay.andre.gradebook.service,\
+com.liferay.andre.gradebook.service.persistence,\
+com.liferay.andre.gradebook.validator
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../gradebook-service/service.xml

@@ -21,7 +21,6 @@
 		<column name="userName" type="String" />
 		<column name="createDate" type="Date" />
 		<column name="modifiedDate" type="Date" />
-		<column name="title" type="String" />
 		<column name="description" type="String" />
 		<column name="dueDate" type="Date" />
 
