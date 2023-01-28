@@ -14,10 +14,25 @@
 
 package com.liferay.andre.gradebook.service.impl;
 
+import com.liferay.andre.gradebook.model.Assignment;
 import com.liferay.andre.gradebook.service.base.AssignmentLocalServiceBaseImpl;
+import com.liferay.andre.gradebook.validator.AssignmentValidator;
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.dao.orm.Disjunction;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.Validator;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -27,18 +42,20 @@ import org.osgi.service.component.annotations.Component;
 	service = AopService.class
 )
 public class AssignmentLocalServiceImpl extends AssignmentLocalServiceBaseImpl {
-	public Assiginment addAssignment(long groupId, String title, String description,
-									 Date dueDate, ServicContext servicContext) throws PortalException {
+	public Assignment addAssignment(long groupId, String title, String description,
+									Date dueDate, ServiceContext serviceContext) throws PortalException {
 
-		Grup grup = groupLocalService.getGroup(groupId);
-		Long userId = servicContext.getUserId();
+		// Validate assignment parameters.
+		_assignmentValidator.validate(title, description, dueDate);
+		Group group = groupLocalService.getGroup(groupId);
+		Long userId = serviceContext.getUserId();
 		User user = userLocalService.getUser(userId);
 
 		Long assignmentId = counterLocalService.increment(Assignment.class);
 
 		Assignment assignment = createAssignment(assignmentId);
 
-		assignment.setCompanyId(grup.getCompany());
+		assignment.setCompanyId(group.getCompanyId());
 		assignment.setCreateDate(serviceContext.getCreateDate(new Date()));
 		assignment.setDueDate(dueDate);
 		assignment.setDescription(description);
@@ -46,15 +63,17 @@ public class AssignmentLocalServiceImpl extends AssignmentLocalServiceBaseImpl {
 		assignment.setModifiedDate(serviceContext.getModifiedDate(new Date()));
 		assignment.setTitle(title);
 		assignment.setUserId(userId);
-		assignment.setUserName(user.getSreenName);
+		assignment.setUserName(user.getScreenName());
 
 		return super.addAssignment(assignment);
 	}
 
-	public Assiginment addAssignment(long assignmentId, String title, String description,
-									 Date dueDate, ServicContext servicContext) throws PortalException {
+	public Assignment updateAssignment(long assignmentId, String title, String description,
+									 Date dueDate, ServiceContext servicContext) throws PortalException {
 
-		Assignment assignment = getAssignment(assignmentId());
+		// Validate assignment parameters.
+		_assignmentValidator.validate(title, description, dueDate);
+		Assignment assignment = getAssignment(assignmentId);
 
 		assignment.setModifiedDate(new Date());
 		assignment.setTitle(title);
@@ -86,7 +105,7 @@ public class AssignmentLocalServiceImpl extends AssignmentLocalServiceBaseImpl {
 	}
 	private DynamicQuery getKeywordSearchDynamicQuery(long groupId, String keywords){
 		DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
-		if (Validator.isNot(keywords)){
+		if (Validator.isNotNull(keywords)){
 			Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
 			disjunctionQuery.add(RestrictionsFactoryUtil.like("title", "%" + keywords + "%"));
 			disjunctionQuery.add(RestrictionsFactoryUtil.like("description", "%" + keywords + "%"));
@@ -94,4 +113,14 @@ public class AssignmentLocalServiceImpl extends AssignmentLocalServiceBaseImpl {
 		}
 		return dynamicQuery;
 	}
+
+	public Assignment addAssignment(Assignment assignment){
+		throw new UnsupportedOperationException("Not Supported");
+	}
+	public Assignment updateAssignment(Assignment assignment){
+		throw new UnsupportedOperationException("Not Supported");
+	}
+
+	@Reference
+	AssignmentValidator _assignmentValidator;
 }
