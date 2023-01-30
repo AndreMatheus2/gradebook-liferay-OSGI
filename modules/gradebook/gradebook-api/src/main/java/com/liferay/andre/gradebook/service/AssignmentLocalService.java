@@ -37,6 +37,8 @@ import java.io.Serializable;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -78,7 +80,8 @@ public interface AssignmentLocalService
 	public Assignment addAssignment(Assignment assignment);
 
 	public Assignment addAssignment(
-			long groupId, String title, String description, Date dueDate,
+			long groupId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, Date dueDate,
 			ServiceContext serviceContext)
 		throws PortalException;
 
@@ -106,9 +109,11 @@ public interface AssignmentLocalService
 	 *
 	 * @param assignment the assignment
 	 * @return the assignment that was removed
+	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public Assignment deleteAssignment(Assignment assignment);
+	public Assignment deleteAssignment(Assignment assignment)
+		throws PortalException;
 
 	/**
 	 * Deletes the assignment with the primary key from the database. Also notifies the appropriate model listeners.
@@ -219,26 +224,6 @@ public interface AssignmentLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Assignment getAssignment(long assignment) throws PortalException;
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Assignment> getAssignmentByGroupId(long groupId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Assignment> getAssignmentByGroupId(
-		long groupId, int start, int end);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Assignment> getAssignmentByGroupId(
-		long groupId, int start, int end,
-		OrderByComparator<Assignment> orderByComparator);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Assignment> getAssignmentByKeywords(
-		long groupId, String keywords, int start, int end,
-		OrderByComparator<Assignment> orderByComparator);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Long getAssignmentCountByKeywords(long groupId, String keywords);
-
 	/**
 	 * Returns a range of all the assignments.
 	 *
@@ -253,6 +238,23 @@ public interface AssignmentLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Assignment> getAssignments(int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentsByGroupId(long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentsByGroupId(
+		long groupId, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentsByGroupId(
+		long groupId, int start, int end,
+		OrderByComparator<Assignment> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentsByKeywords(
+		long groupId, String keywords, int start, int end,
+		OrderByComparator<Assignment> orderByComparator);
+
 	/**
 	 * Returns the number of assignments.
 	 *
@@ -260,6 +262,9 @@ public interface AssignmentLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getAssignmentsCount();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long getAssignmentsCountByKeywords(long groupId, String keywords);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -293,8 +298,8 @@ public interface AssignmentLocalService
 	public Assignment updateAssignment(Assignment assignment);
 
 	public Assignment updateAssignment(
-			long assignmentId, String title, String description, Date dueDate,
-			ServiceContext servicContext)
-		throws PortalException;
+			long assignmentId, Map<Locale, String> titleMap, String description,
+			Date dueDate, ServiceContext serviceContext)
+		throws PortalExceptio;
 
 }

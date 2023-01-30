@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.dao.orm.Disjunction;import com.liferay.portal.k
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -53,29 +54,42 @@ import org.osgi.service.component.annotations.Reference;
 		service = AopService.class
 )
 public class AssignmentLocalServiceImpl extends AssignmentLocalServiceBaseImpl {
-	public Assignment addAssignment(long groupId, Map<Locale, String> titleMap, String description,
-Date dueDate, ServiceContext serviceContext) throws PortalException {
+
+	public Assignment addAssignment(
+			long groupId, Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+Date dueDate, ServiceContext serviceContext)
+			throws PortalException {
 // Validate assignment parameters.
-		_assignmentValidator.validate(titleMap, description, dueDate);
+		_assignmentValidator.validate(titleMap, descriptionMap, dueDate);
 // Get group and user.
 		Group group = groupLocalService.getGroup(groupId);
 		long userId = serviceContext.getUserId();
 		User user = userLocalService.getUser(userId);
 // Generate primary key for the assignment.
-		long assignmentId = counterLocalService.increment(Assignment.class.getName());
+		long assignmentId =
+				counterLocalService.increment(Assignment.class.getName());
 // Create assigment. This doesn't yet persist the entity.
 		Assignment assignment = createAssignment(assignmentId);
 // Populate fields.
 		assignment.setCompanyId(group.getCompanyId());
 		assignment.setCreateDate(serviceContext.getCreateDate(new Date()));
-		assignment.setDueDate(dueDate);
-		assignment.setDescription(description);
+		assignment.setDueDate(dueDate);assignment.setDescriptionMap(descriptionMap);
 		assignment.setGroupId(groupId);
-		assignment.setModifiedDate(serviceContext.getModifiedDate(new Date()));assignment.setTitleMap(titleMap);
+		assignment.setModifiedDate(serviceContext.getModifiedDate(new Date()));
+		assignment.setTitleMap(titleMap);
 		assignment.setUserId(userId);
 		assignment.setUserName(user.getScreenName());
 // Persist assignment to database.
-		return super.addAssignment(assignment);
+		assignment = super.addAssignment(assignment);
+// Add permission resources.
+		boolean portletActions = false;
+		boolean addGroupPermissions = true;
+		boolean addGuestPermissions = true;
+		resourceLocalService.addResources(
+				group.getCompanyId(), groupId, userId, Assignment.class.getName(),
+				assignment.getAssignmentId(), portletActions, addGroupPermissions,
+				addGuestPermissions);
+		return assignment;
 	}
 	public Assignment updateAssignment(long assignmentId, Map<Locale, String> titleMap,
 									   String description, Date dueDate, ServiceContext serviceContext) throws PortalExceptio {
@@ -127,13 +141,22 @@ return assignment;
 		}
 		return dynamicQuery;
 	}
+	public Assignment deleteAssignment(Assignment assignment)
+			throws PortalException {
+// Delete permission resources.
+		resourceLocalService.deleteResource(
+				assignment, ResourceConstants.SCOPE_INDIVIDUAL);
+// Delete the Assignment
+		return super.deleteAssignment(assignment);
+	}
 	@Override
 	public Assignment addAssignment(Assignment assignment) {
 		throw new UnsupportedOperationException("Not supported.");
 	}@Override
-public Assignment updateAssignment(Assignment assignment) {
+	public Assignment updateAssignment(Assignment assignment) {
 	throw new UnsupportedOperationException("Not supported.");
-}
+	}
 	@Reference
 	AssignmentValidator _assignmentValidator;
+
 }
