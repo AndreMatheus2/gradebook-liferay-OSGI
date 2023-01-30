@@ -89,6 +89,8 @@ Date dueDate, ServiceContext serviceContext)
 				group.getCompanyId(), groupId, userId, Assignment.class.getName(),
 				assignment.getAssignmentId(), portletActions, addGroupPermissions,
 				addGuestPermissions);
+		// Update asset resources.
+		updateAsset(assignment, serviceContext);
 		return assignment;
 	}
 	public Assignment updateAssignment(long assignmentId, Map<Locale, String> titleMap,
@@ -103,8 +105,10 @@ assignment.setTitleMap(titleMap);
 assignment.setDueDate(dueDate);
 assignment.setDescription(description);
 	assignment = super.updateAssignment(assignment);
-return assignment;
-}
+// Update Asset resources.
+		updateAsset(assignment, serviceContext);
+		return assignment;
+	}
 	public List<Assignment> getAssignmentsByGroupId(long groupId) {
 		return assignmentPersistence.findByGroupId(groupId);
 	}
@@ -141,12 +145,30 @@ return assignment;
 		}
 		return dynamicQuery;
 	}
+	private void updateAsset(
+			Assignment assignment, ServiceContext serviceContext)
+			throws PortalException {
+		assetEntryLocalService.updateEntry(
+				serviceContext.getUserId(), serviceContext.getScopeGroupId(),
+				assignment.getCreateDate(), assignment.getModifiedDate(),
+				Assignment.class.getName(), assignment.getAssignmentId(),
+				assignment.getUserUuid(), 0, serviceContext.getAssetCategoryIds(),
+				serviceContext.getAssetTagNames(), true, true,
+				assignment.getCreateDate(), null, null, null,
+				ContentTypes.TEXT_HTML,
+				assignment.getTitle(serviceContext.getLocale()),
+				assignment.getDescription(), null, null, null, 0, 0,
+				serviceContext.getAssetPriority());
+	}
 	public Assignment deleteAssignment(Assignment assignment)
 			throws PortalException {
 // Delete permission resources.
 		resourceLocalService.deleteResource(
 				assignment, ResourceConstants.SCOPE_INDIVIDUAL);
 // Delete the Assignment
+		// Delete the Asset resource.
+		assetEntryLocalService.deleteEntry(
+				Assignment.class.getName(), assignment.getAssignmentId());
 		return super.deleteAssignment(assignment);
 	}
 	@Override
