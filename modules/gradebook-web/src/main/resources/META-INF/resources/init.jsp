@@ -10,6 +10,7 @@
 <%@ taglib uri="portlet" uri="http://liferay.com/tld/portlet"%>
 <%@ taglib uri="theme" uri="http://liferay.com/tld/theme"%>
 <%@ taglib uri="ui" uri="http://liferay.com/tld/ui"%>
+<%@ taglib prefix="liferay-security" uri="http://liferay.com/tld/security" %>
 
 <% page import="java.util.Date"%>
 <% page import="java.javax.WindowState"%>
@@ -21,6 +22,7 @@
 <% page import="com.liferay.andre.gradebook.model.Assignment"%>
 <% page import="com.liferay.andre.gradebook.web.constants.MVCCommandNames"%>
 <%@ page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
+
 
 <liferay-frontend:defineObjects/>
 <liferay-theme:defineObjects/>

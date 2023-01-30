@@ -1,5 +1,4 @@
 package com.liferay.andre.gradebook.web.portlet.action;
-
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -14,12 +13,14 @@ import com.liferay.andre.gradebook.model.Assignment;
 import com.liferay.andre.gradebook.service.AssignmentService;
 import com.liferay.andre.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.andre.gradebook.web.constants.MVCCommandNames;
-import com.liferay.andre.gradebook.web.display.context.AssignmentsManagementToolbarDisplayCo
+import com.liferay.andre.gradebook.web.display.context.AssignmentsManagementToolbarDisplayContext;
+import com.liferay.andre.gradebook.web.internal.security.permission.resource.AssignmentPermi
 import java.util.List;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import org.osgi.service.component.annotations.Component;import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 /**
  * MVC command for showing the assignments list.
  *
@@ -39,11 +40,14 @@ public class ViewAssignmentsMVCRenderCommand implements MVCRenderCommand {
     public String render(
             RenderRequest renderRequest, RenderResponse renderResponse)
             throws PortletException {
-// Add assignment list related attributes.
-        addAssignmentListAttributes(renderRequest);
+// Add assignment list related attributes.addAssignmentListAttributes(renderRequest);
 // Add Clay management toolbar related attributes.
         addManagementToolbarAttributes(renderRequest, renderResponse);
-        return "/view.jsp";}
+// Add permission checker.
+        renderRequest.setAttribute(
+                "assignmentPermission", _assignmentPermission);
+        return "/view.jsp";
+    }
     /**
      * Adds assigment list related attributes to the request.
      *
@@ -56,8 +60,7 @@ public class ViewAssignmentsMVCRenderCommand implements MVCRenderCommand {
         int currentPage = ParamUtil.getInteger(
                 renderRequest, SearchContainer.DEFAULT_CUR_PARAM,
                 SearchContainer.DEFAULT_CUR);
-        int delta = ParamUtil.getInteger(
-                renderRequest, SearchContainer.DEFAULT_DELTA_PARAM,
+        int delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM,
                 SearchContainer.DEFAULT_DELTA);
         int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
         int end = start + delta;
@@ -67,7 +70,8 @@ public class ViewAssignmentsMVCRenderCommand implements MVCRenderCommand {
 // search engine
         to get localized sort options.
                 String orderByCol =
-                ParamUtil.getString(renderRequest, "orderByCol", "title");String orderByType =
+                ParamUtil.getString(renderRequest, "orderByCol", "title");
+        String orderByType =
                 ParamUtil.getString(renderRequest, "orderByType", "asc");
 // Create comparator
         OrderByComparator<Assignment> comparator =
@@ -77,18 +81,18 @@ public class ViewAssignmentsMVCRenderCommand implements MVCRenderCommand {
 // Notice that cleaning keywords is not implemented.
         String keywords = ParamUtil.getString(renderRequest, "keywords");
 // Call the service to get the list of assignments.
-        List<Assignment> assignments =
+        List<Assignment> assigments =
                 _assignmentService.getAssignmentsByKeywords(
-                        themeDisplay.getScopeGroupId(), keywords, start, end,
-                        comparator);
+                        themeDisplay.getScopeGroupId(), keywords, start, end,comparator);
 // Set request attributes.
-        renderRequest.setAttribute("assignments", assignments);
+        renderRequest.setAttribute("assignments", assigments);
         renderRequest.setAttribute(
                 "assignmentCount", _assignmentService.getAssignmentsCountByKeywords(
                         themeDisplay.getScopeGroupId(), keywords));
     }
     /**
-     * Adds Clay management toolbar context object to the request.*
+     * Adds Clay management toolbar context object to the request.
+     *
      * @param renderRequest
      * @param renderResponse
      */
@@ -102,10 +106,11 @@ public class ViewAssignmentsMVCRenderCommand implements MVCRenderCommand {
         new AssignmentsManagementToolbarDisplayContext(
                 liferayPortletRequest, liferayPortletResponse,
                 _portal.getHttpServletRequest(renderRequest));
-        renderRequest.setAttribute(
-                "assignmentsManagementToolbarDisplayContext",
+        renderRequest.setAttribute("assignmentsManagementToolbarDisplayContext",
                 assignmentsManagementToolbarDisplayContext);
     }
+    @Reference
+    protected AssignmentPermission _assignmentPermission;
     @Reference
     protected AssignmentService _assignmentService;
     @Reference

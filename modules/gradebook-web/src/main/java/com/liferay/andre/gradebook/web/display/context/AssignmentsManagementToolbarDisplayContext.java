@@ -50,6 +50,12 @@ public class AssignmentsManagementToolbarDisplayContext
      */
     public CreationMenu getCreationMenu() {
 // Create the menu.
+        // Check if user has permissions to add assignments.
+        if (!AssignmentTopLevelPermission.contains(
+                _themeDisplay.getPermissionChecker(),
+                _themeDisplay.getScopeGroupId(), "ADD_ENTRY")) {
+            return null;
+        }
         return new CreationMenu() {
             {
                 addDropdownItem(
