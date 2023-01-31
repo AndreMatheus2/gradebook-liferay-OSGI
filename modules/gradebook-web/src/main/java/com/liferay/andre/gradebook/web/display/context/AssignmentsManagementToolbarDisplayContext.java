@@ -19,9 +19,11 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.andre.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.andre.gradebook.web.constants.MVCCommandNames;
 import java.util.List;
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
+import com.liferay.andre.gradebook.web.internal.security.permission.resource.AssignmentTopLevelPermission;
 /**
  * Assigments management toolbar display context.
  *
@@ -60,12 +62,13 @@ public class AssignmentsManagementToolbarDisplayContext
             {
                 addDropdownItem(
                         dropdownItem -> {
+                            MimeResponse.Copy mvcCommandNames = null;
                             dropdownItem.setHref(
                                     liferayPortletResponse.createRenderURL(
-                                            "mvcRenderCommandName", MVCCommandNames
+                                            "mvcRenderCommandName", mvcCommandNames),
                                             "redirect", currentURLObj.toString());
                             dropdownItem.setLabel(
-                                    LanguageUtil.get(request, "add-assignme
+                                    LanguageUtil.get(request, "add-assignment"));
                         });
             }
         };
@@ -138,7 +141,7 @@ public class AssignmentsManagementToolbarDisplayContext
         portletURL.setParameter(
                 "mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENTS);
         int delta =
-                ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PAR
+                ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM);
         if (delta > 0) {
             portletURL.setParameter("delta", String.valueOf(delta));
         }
@@ -170,9 +173,9 @@ public class AssignmentsManagementToolbarDisplayContext
         return new DropdownItemList() {{
             add(
                     dropdownItem -> {
-                        dropdownItem.setActive("title".equals(getOrderB
+                        dropdownItem.setActive("title".equals(getOrderByCol()));
                                 dropdownItem.setHref(
-                                        _getCurrentSortingURL(), "orderByCol",
+                                        _getCurrentSortingURL(), "orderByCol");
                                         dropdownItem.setLabel(
                                                 LanguageUtil.get(request, "title"));
                     });
@@ -181,10 +184,9 @@ public class AssignmentsManagementToolbarDisplayContext
                         dropdownItem.setActive(
                                 "createDate".equals(getOrderByCol()));
                         dropdownItem.setHref(
-                                _getCurrentSortingURL(), "orderByCol",
-                                "createDate");
+                                _getCurrentSortingURL(), "orderByCol", "createDate");
                         dropdownItem.setLabel(
-                                LanguageUtil.get(request, "create-date"
+                                LanguageUtil.get(request, "create-date"));
                     });
         }
         };

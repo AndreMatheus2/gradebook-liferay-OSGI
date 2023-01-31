@@ -1,4 +1,4 @@
-package com.liferay.training.gradebook.web.internal.security.permission.resource;
+package com.liferay.andre.gradebook.web.internal.security.permission.resource;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
@@ -20,8 +20,8 @@ public class AssignmentPermission {
                 permissionChecker, assignment, actionId);
     }
     public static boolean contains(
-            PermissionChecker permissionChecker, long assignmentId, String actionId
-throws PortalException {
+            PermissionChecker permissionChecker, long assignmentId, String actionId)
+            throws PortalException {
         return _assignmentModelResourcePermission.contains(
                 permissionChecker, assignmentId, actionId);
     }

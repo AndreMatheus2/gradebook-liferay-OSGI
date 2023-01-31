@@ -11,7 +11,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 @Component(
         immediate = true,
-        property = "indexer.class.name=com.liferay.training.gradebook.model.Assignment",service = KeywordQueryContributor.class
+        property = "indexer.class.name=com.liferay.andre.gradebook.model.Assignment",service = KeywordQueryContributor.class
 )
 public class AssignmentKeywordQueryContributor
         implements KeywordQueryContributor {

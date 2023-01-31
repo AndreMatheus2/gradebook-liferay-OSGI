@@ -6,21 +6,21 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.andre.gradebook.exception.AssignmentValidationException;
 import com.liferay.andre.gradebook.model.Assignment;
-import com.liferay.andre.gradebook.service.AssignmentService;
 import com.liferay.andre.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.andre.gradebook.web.constants.MVCCommandNames;
-import java.util.Date;import java.util.Locale;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import com.liferay.andre.gradebook.service.AssignmentService;
 /**
  * MVC Action Command for adding assignments.
  *
@@ -52,7 +52,7 @@ public class AddAssignmentMVCActionCommand extends BaseMVCActionCommand {
 // Call the service to add a new assignment.
             _assignmentService.addAssignment(
                     themeDisplay.getScopeGroupId(), titleMap, description, dueDate,
-                    sendRedirect(actionRequest, actionResponse);
+                    sendRedirect(actionRequest, actionResponse));
         }
         catch (AssignmentValidationException ave) {
             ave.printStackTrace();

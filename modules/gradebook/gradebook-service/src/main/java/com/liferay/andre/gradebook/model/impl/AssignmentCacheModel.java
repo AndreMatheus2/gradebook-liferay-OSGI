@@ -48,7 +48,7 @@ public class AssignmentCacheModel
 		AssignmentCacheModel assignmentCacheModel =
 			(AssignmentCacheModel)object;
 
-		if (assignment == assignmentCacheModel.assignment) {
+		if (assignmentId == assignmentCacheModel.assignmentId) {
 			return true;
 		}
 
@@ -57,17 +57,19 @@ public class AssignmentCacheModel
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, assignment);
+		return HashUtil.hash(0, assignmentId);
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(31);
 
-		sb.append("{assignment=");
-		sb.append(assignment);
-		sb.append(", GroupId=");
-		sb.append(GroupId);
+		sb.append("{uuid=");
+		sb.append(uuid);
+		sb.append(", assignmentId=");
+		sb.append(assignmentId);
+		sb.append(", groupId=");
+		sb.append(groupId);
 		sb.append(", companyId=");
 		sb.append(companyId);
 		sb.append(", userId=");
@@ -82,6 +84,14 @@ public class AssignmentCacheModel
 		sb.append(description);
 		sb.append(", dueDate=");
 		sb.append(dueDate);
+		sb.append(", status=");
+		sb.append(status);
+		sb.append(", statusByUserId=");
+		sb.append(statusByUserId);
+		sb.append(", statusByUserName=");
+		sb.append(statusByUserName);
+		sb.append(", statusDate=");
+		sb.append(statusDate);
 		sb.append(", title=");
 		sb.append(title);
 		sb.append("}");
@@ -93,8 +103,15 @@ public class AssignmentCacheModel
 	public Assignment toEntityModel() {
 		AssignmentImpl assignmentImpl = new AssignmentImpl();
 
-		assignmentImpl.setAssignment(assignment);
-		assignmentImpl.setGroupId(GroupId);
+		if (uuid == null) {
+			assignmentImpl.setUuid("");
+		}
+		else {
+			assignmentImpl.setUuid(uuid);
+		}
+
+		assignmentImpl.setAssignmentId(assignmentId);
+		assignmentImpl.setGroupId(groupId);
 		assignmentImpl.setCompanyId(companyId);
 		assignmentImpl.setUserId(userId);
 
@@ -133,6 +150,23 @@ public class AssignmentCacheModel
 			assignmentImpl.setDueDate(new Date(dueDate));
 		}
 
+		assignmentImpl.setStatus(status);
+		assignmentImpl.setStatusByUserId(statusByUserId);
+
+		if (statusByUserName == null) {
+			assignmentImpl.setStatusByUserName("");
+		}
+		else {
+			assignmentImpl.setStatusByUserName(statusByUserName);
+		}
+
+		if (statusDate == Long.MIN_VALUE) {
+			assignmentImpl.setStatusDate(null);
+		}
+		else {
+			assignmentImpl.setStatusDate(new Date(statusDate));
+		}
+
 		if (title == null) {
 			assignmentImpl.setTitle("");
 		}
@@ -147,9 +181,11 @@ public class AssignmentCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		assignment = objectInput.readLong();
+		uuid = objectInput.readUTF();
 
-		GroupId = objectInput.readLong();
+		assignmentId = objectInput.readLong();
+
+		groupId = objectInput.readLong();
 
 		companyId = objectInput.readLong();
 
@@ -159,14 +195,27 @@ public class AssignmentCacheModel
 		modifiedDate = objectInput.readLong();
 		description = objectInput.readUTF();
 		dueDate = objectInput.readLong();
+
+		status = objectInput.readInt();
+
+		statusByUserId = objectInput.readLong();
+		statusByUserName = objectInput.readUTF();
+		statusDate = objectInput.readLong();
 		title = objectInput.readUTF();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
-		objectOutput.writeLong(assignment);
+		if (uuid == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(uuid);
+		}
 
-		objectOutput.writeLong(GroupId);
+		objectOutput.writeLong(assignmentId);
+
+		objectOutput.writeLong(groupId);
 
 		objectOutput.writeLong(companyId);
 
@@ -191,6 +240,19 @@ public class AssignmentCacheModel
 
 		objectOutput.writeLong(dueDate);
 
+		objectOutput.writeInt(status);
+
+		objectOutput.writeLong(statusByUserId);
+
+		if (statusByUserName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(statusByUserName);
+		}
+
+		objectOutput.writeLong(statusDate);
+
 		if (title == null) {
 			objectOutput.writeUTF("");
 		}
@@ -199,8 +261,9 @@ public class AssignmentCacheModel
 		}
 	}
 
-	public long assignment;
-	public long GroupId;
+	public String uuid;
+	public long assignmentId;
+	public long groupId;
 	public long companyId;
 	public long userId;
 	public String userName;
@@ -208,6 +271,10 @@ public class AssignmentCacheModel
 	public long modifiedDate;
 	public String description;
 	public long dueDate;
+	public int status;
+	public long statusByUserId;
+	public String statusByUserName;
+	public long statusDate;
 	public String title;
 
 }

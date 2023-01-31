@@ -11,7 +11,7 @@ import java.util.Locale;
 import org.osgi.service.component.annotations.Component;
 @Component(
         immediate = true,
-        property = "indexer.class.name=com.liferay.training.gradebook.model.Assign
+        property = "indexer.class.name=com.liferay.andre.gradebook.model.AssignmentModelSummaryContributor",
         service = ModelSummaryContributor.class
 )
 public class AssignmentModelSummaryContributor
@@ -22,15 +22,16 @@ public class AssignmentModelSummaryContributor
         String languageId = LocaleUtil.toLanguageId(locale);
         return _createSummary(
                 document,
-                LocalizationUtil.getLocalizedName(Field.DESCRIPTION, langu
-                        LocalizationUtil.getLocalizedName(Field.TITLE, languageId)
+                LocalizationUtil.getLocalizedName(Field.DESCRIPTION, languageId),
+                LocalizationUtil.getLocalizedName(Field.TITLE, languageId));
     }
     private Summary _createSummary(
             Document document, String descriptionField, String titleField) {
         String prefix = Field.SNIPPET + StringPool.UNDERLINE;
         Summary summary = new Summary(
                 document.get(prefix + titleField, titleField),
-                document.get(prefix + descriptionField, descriptionField)summary.setMaxContentLength(200);
+                document.get(prefix + descriptionField, descriptionField));
+                summary.setMaxContentLength(200);
         return summary;
     }
 }

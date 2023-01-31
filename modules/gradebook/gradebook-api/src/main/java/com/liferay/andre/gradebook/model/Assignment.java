@@ -38,12 +38,12 @@ public interface Assignment extends AssignmentModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to <code>com.liferay.andre.gradebook.model.impl.AssignmentImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public static final Accessor<Assignment, Long> ASSIGNMENT_ACCESSOR =
+	public static final Accessor<Assignment, Long> ASSIGNMENT_ID_ACCESSOR =
 		new Accessor<Assignment, Long>() {
 
 			@Override
 			public Long get(Assignment assignment) {
-				return assignment.getAssignment();
+				return assignment.getAssignmentId();
 			}
 
 			@Override

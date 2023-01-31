@@ -1,4 +1,5 @@
 package com.liferay.andre.gradebook.web.portlet.action;
+import com.liferay.andre.gradebook.web.internal.security.permission.resource.AssignmentPermission;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -14,7 +15,7 @@ import com.liferay.andre.gradebook.service.AssignmentService;
 import com.liferay.andre.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.andre.gradebook.web.constants.MVCCommandNames;
 import com.liferay.andre.gradebook.web.display.context.AssignmentsManagementToolbarDisplayContext;
-import com.liferay.andre.gradebook.web.internal.security.permission.resource.AssignmentPermi
+import com.liferay.andre.gradebook.web.internal.security.permission.resource.AssignmentPermission;
 import java.util.List;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -68,7 +69,6 @@ public class ViewAssignmentsMVCRenderCommand implements MVCRenderCommand {
 // Notice that this doesn't really sort on title because the field is
 // stored in XML. In real world this search would be integrated to the
 // search engine
-        to get localized sort options.
                 String orderByCol =
                 ParamUtil.getString(renderRequest, "orderByCol", "title");
         String orderByType =
@@ -102,7 +102,7 @@ public class ViewAssignmentsMVCRenderCommand implements MVCRenderCommand {
                 _portal.getLiferayPortletRequest(renderRequest);
         LiferayPortletResponse liferayPortletResponse =
                 _portal.getLiferayPortletResponse(renderResponse);
-        AssignmentsManagementToolbarDisplayContext assignmentsManagementToolbarDisplayC
+        AssignmentsManagementToolbarDisplayContext assignmentsManagementToolbarDisplayContext =
         new AssignmentsManagementToolbarDisplayContext(
                 liferayPortletRequest, liferayPortletResponse,
                 _portal.getHttpServletRequest(renderRequest));

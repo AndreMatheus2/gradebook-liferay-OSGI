@@ -26,12 +26,61 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class AssignmentServiceWrapper
 	implements AssignmentService, ServiceWrapper<AssignmentService> {
 
-	public AssignmentServiceWrapper() {
-		this(null);
-	}
-
 	public AssignmentServiceWrapper(AssignmentService assignmentService) {
 		_assignmentService = assignmentService;
+	}
+
+	@Override
+	public com.liferay.andre.gradebook.model.Assignment addAssignment(
+			long groupId, java.util.Map<java.util.Locale, String> titleMap,
+			java.util.Map<java.util.Locale, String> descriptionMap,
+			java.util.Date dueDate,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _assignmentService.addAssignment(
+			groupId, titleMap, descriptionMap, dueDate, serviceContext);
+	}
+
+	@Override
+	public com.liferay.andre.gradebook.model.Assignment deleteAssignment(
+			long assignmentId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _assignmentService.deleteAssignment(assignmentId);
+	}
+
+	@Override
+	public com.liferay.andre.gradebook.model.Assignment getAssignment(
+			long assignmentId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _assignmentService.getAssignment(assignmentId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentsByGroupId(long groupId) {
+
+		return _assignmentService.getAssignmentsByGroupId(groupId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentsByKeywords(
+			long groupId, String keywords, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.andre.gradebook.model.Assignment>
+					orderByComparator) {
+
+		return _assignmentService.getAssignmentsByKeywords(
+			groupId, keywords, start, end, orderByComparator);
+	}
+
+	@Override
+	public long getAssignmentsCountByKeywords(long groupId, String keywords) {
+		return _assignmentService.getAssignmentsCountByKeywords(
+			groupId, keywords);
 	}
 
 	/**
@@ -42,6 +91,18 @@ public class AssignmentServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _assignmentService.getOSGiServiceIdentifier();
+	}
+
+	@Override
+	public com.liferay.andre.gradebook.model.Assignment updateAssignment(
+			long assignmentId, java.util.Map<java.util.Locale, String> titleMap,
+			java.util.Map<java.util.Locale, String> descriptionMap,
+			java.util.Date dueDate,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _assignmentService.updateAssignment(
+			assignmentId, titleMap, descriptionMap, dueDate, serviceContext);
 	}
 
 	@Override

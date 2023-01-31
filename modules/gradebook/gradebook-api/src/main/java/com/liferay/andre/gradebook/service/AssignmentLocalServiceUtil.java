@@ -15,7 +15,6 @@
 package com.liferay.andre.gradebook.service;
 
 import com.liferay.andre.gradebook.model.Assignment;
-import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.PersistedModel;
@@ -74,21 +73,11 @@ public class AssignmentLocalServiceUtil {
 	/**
 	 * Creates a new assignment with the primary key. Does not add the assignment to the database.
 	 *
-	 * @param assignment the primary key for the new assignment
+	 * @param assignmentId the primary key for the new assignment
 	 * @return the new assignment
 	 */
-	public static Assignment createAssignment(long assignment) {
-		return getService().createAssignment(assignment);
-	}
-
-	/**
-	 * @throws PortalException
-	 */
-	public static PersistedModel createPersistedModel(
-			Serializable primaryKeyObj)
-		throws PortalException {
-
-		return getService().createPersistedModel(primaryKeyObj);
+	public static Assignment createAssignment(long assignmentId) {
+		return getService().createAssignment(assignmentId);
 	}
 
 	/**
@@ -115,14 +104,14 @@ public class AssignmentLocalServiceUtil {
 	 * <strong>Important:</strong> Inspect AssignmentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param assignment the primary key of the assignment
+	 * @param assignmentId the primary key of the assignment
 	 * @return the assignment that was removed
 	 * @throws PortalException if a assignment with the primary key could not be found
 	 */
-	public static Assignment deleteAssignment(long assignment)
+	public static Assignment deleteAssignment(long assignmentId)
 		throws PortalException {
 
-		return getService().deleteAssignment(assignment);
+		return getService().deleteAssignment(assignmentId);
 	}
 
 	/**
@@ -133,14 +122,6 @@ public class AssignmentLocalServiceUtil {
 		throws PortalException {
 
 		return getService().deletePersistedModel(persistedModel);
-	}
-
-	public static <T> T dslQuery(DSLQuery dslQuery) {
-		return getService().dslQuery(dslQuery);
-	}
-
-	public static int dslQueryCount(DSLQuery dslQuery) {
-		return getService().dslQueryCount(dslQuery);
 	}
 
 	public static DynamicQuery dynamicQuery() {
@@ -220,8 +201,21 @@ public class AssignmentLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static Assignment fetchAssignment(long assignment) {
-		return getService().fetchAssignment(assignment);
+	public static Assignment fetchAssignment(long assignmentId) {
+		return getService().fetchAssignment(assignmentId);
+	}
+
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment, or <code>null</code> if a matching assignment could not be found
+	 */
+	public static Assignment fetchAssignmentByUuidAndGroupId(
+		String uuid, long groupId) {
+
+		return getService().fetchAssignmentByUuidAndGroupId(uuid, groupId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -233,14 +227,29 @@ public class AssignmentLocalServiceUtil {
 	/**
 	 * Returns the assignment with the primary key.
 	 *
-	 * @param assignment the primary key of the assignment
+	 * @param assignmentId the primary key of the assignment
 	 * @return the assignment
 	 * @throws PortalException if a assignment with the primary key could not be found
 	 */
-	public static Assignment getAssignment(long assignment)
+	public static Assignment getAssignment(long assignmentId)
 		throws PortalException {
 
-		return getService().getAssignment(assignment);
+		return getService().getAssignment(assignmentId);
+	}
+
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment
+	 * @throws PortalException if a matching assignment could not be found
+	 */
+	public static Assignment getAssignmentByUuidAndGroupId(
+			String uuid, long groupId)
+		throws PortalException {
+
+		return getService().getAssignmentByUuidAndGroupId(uuid, groupId);
 	}
 
 	/**
@@ -285,6 +294,37 @@ public class AssignmentLocalServiceUtil {
 	}
 
 	/**
+	 * Returns all the assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @return the matching assignments, or an empty list if no matches were found
+	 */
+	public static List<Assignment> getAssignmentsByUuidAndCompanyId(
+		String uuid, long companyId) {
+
+		return getService().getAssignmentsByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of assignments
+	 * @param end the upper bound of the range of assignments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching assignments, or an empty list if no matches were found
+	 */
+	public static List<Assignment> getAssignmentsByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<Assignment> orderByComparator) {
+
+		return getService().getAssignmentsByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns the number of assignments.
 	 *
 	 * @return the number of assignments
@@ -297,6 +337,14 @@ public class AssignmentLocalServiceUtil {
 		long groupId, String keywords) {
 
 		return getService().getAssignmentsCountByKeywords(groupId, keywords);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return getService().getExportActionableDynamicQuery(portletDataContext);
 	}
 
 	public static
@@ -342,7 +390,7 @@ public class AssignmentLocalServiceUtil {
 			long assignmentId, Map<java.util.Locale, String> titleMap,
 			String description, java.util.Date dueDate,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws PortalExceptio {
+		throws PortalException {
 
 		return getService().updateAssignment(
 			assignmentId, titleMap, description, dueDate, serviceContext);

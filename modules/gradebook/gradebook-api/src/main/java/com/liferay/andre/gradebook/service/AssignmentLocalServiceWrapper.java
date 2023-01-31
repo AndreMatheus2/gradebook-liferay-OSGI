@@ -26,10 +26,6 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 public class AssignmentLocalServiceWrapper
 	implements AssignmentLocalService, ServiceWrapper<AssignmentLocalService> {
 
-	public AssignmentLocalServiceWrapper() {
-		this(null);
-	}
-
 	public AssignmentLocalServiceWrapper(
 		AssignmentLocalService assignmentLocalService) {
 
@@ -68,25 +64,14 @@ public class AssignmentLocalServiceWrapper
 	/**
 	 * Creates a new assignment with the primary key. Does not add the assignment to the database.
 	 *
-	 * @param assignment the primary key for the new assignment
+	 * @param assignmentId the primary key for the new assignment
 	 * @return the new assignment
 	 */
 	@Override
 	public com.liferay.andre.gradebook.model.Assignment createAssignment(
-		long assignment) {
+		long assignmentId) {
 
-		return _assignmentLocalService.createAssignment(assignment);
-	}
-
-	/**
-	 * @throws PortalException
-	 */
-	@Override
-	public com.liferay.portal.kernel.model.PersistedModel createPersistedModel(
-			java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _assignmentLocalService.createPersistedModel(primaryKeyObj);
+		return _assignmentLocalService.createAssignment(assignmentId);
 	}
 
 	/**
@@ -115,16 +100,16 @@ public class AssignmentLocalServiceWrapper
 	 * <strong>Important:</strong> Inspect AssignmentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param assignment the primary key of the assignment
+	 * @param assignmentId the primary key of the assignment
 	 * @return the assignment that was removed
 	 * @throws PortalException if a assignment with the primary key could not be found
 	 */
 	@Override
 	public com.liferay.andre.gradebook.model.Assignment deleteAssignment(
-			long assignment)
+			long assignmentId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _assignmentLocalService.deleteAssignment(assignment);
+		return _assignmentLocalService.deleteAssignment(assignmentId);
 	}
 
 	/**
@@ -136,18 +121,6 @@ public class AssignmentLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _assignmentLocalService.deletePersistedModel(persistedModel);
-	}
-
-	@Override
-	public <T> T dslQuery(com.liferay.petra.sql.dsl.query.DSLQuery dslQuery) {
-		return _assignmentLocalService.dslQuery(dslQuery);
-	}
-
-	@Override
-	public int dslQueryCount(
-		com.liferay.petra.sql.dsl.query.DSLQuery dslQuery) {
-
-		return _assignmentLocalService.dslQueryCount(dslQuery);
 	}
 
 	@Override
@@ -242,9 +215,24 @@ public class AssignmentLocalServiceWrapper
 
 	@Override
 	public com.liferay.andre.gradebook.model.Assignment fetchAssignment(
-		long assignment) {
+		long assignmentId) {
 
-		return _assignmentLocalService.fetchAssignment(assignment);
+		return _assignmentLocalService.fetchAssignment(assignmentId);
+	}
+
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment, or <code>null</code> if a matching assignment could not be found
+	 */
+	@Override
+	public com.liferay.andre.gradebook.model.Assignment
+		fetchAssignmentByUuidAndGroupId(String uuid, long groupId) {
+
+		return _assignmentLocalService.fetchAssignmentByUuidAndGroupId(
+			uuid, groupId);
 	}
 
 	@Override
@@ -257,16 +245,33 @@ public class AssignmentLocalServiceWrapper
 	/**
 	 * Returns the assignment with the primary key.
 	 *
-	 * @param assignment the primary key of the assignment
+	 * @param assignmentId the primary key of the assignment
 	 * @return the assignment
 	 * @throws PortalException if a assignment with the primary key could not be found
 	 */
 	@Override
 	public com.liferay.andre.gradebook.model.Assignment getAssignment(
-			long assignment)
+			long assignmentId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _assignmentLocalService.getAssignment(assignment);
+		return _assignmentLocalService.getAssignment(assignmentId);
+	}
+
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment
+	 * @throws PortalException if a matching assignment could not be found
+	 */
+	@Override
+	public com.liferay.andre.gradebook.model.Assignment
+			getAssignmentByUuidAndGroupId(String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _assignmentLocalService.getAssignmentByUuidAndGroupId(
+			uuid, groupId);
 	}
 
 	/**
@@ -327,6 +332,43 @@ public class AssignmentLocalServiceWrapper
 	}
 
 	/**
+	 * Returns all the assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @return the matching assignments, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentsByUuidAndCompanyId(String uuid, long companyId) {
+
+		return _assignmentLocalService.getAssignmentsByUuidAndCompanyId(
+			uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of assignments
+	 * @param end the upper bound of the range of assignments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching assignments, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.andre.gradebook.model.Assignment>
+		getAssignmentsByUuidAndCompanyId(
+			String uuid, long companyId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.andre.gradebook.model.Assignment>
+					orderByComparator) {
+
+		return _assignmentLocalService.getAssignmentsByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns the number of assignments.
 	 *
 	 * @return the number of assignments
@@ -340,6 +382,16 @@ public class AssignmentLocalServiceWrapper
 	public long getAssignmentsCountByKeywords(long groupId, String keywords) {
 		return _assignmentLocalService.getAssignmentsCountByKeywords(
 			groupId, keywords);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return _assignmentLocalService.getExportActionableDynamicQuery(
+			portletDataContext);
 	}
 
 	@Override
@@ -392,7 +444,7 @@ public class AssignmentLocalServiceWrapper
 			long assignmentId, java.util.Map<java.util.Locale, String> titleMap,
 			String description, java.util.Date dueDate,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws PortalExceptio {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _assignmentLocalService.updateAssignment(
 			assignmentId, titleMap, description, dueDate, serviceContext);

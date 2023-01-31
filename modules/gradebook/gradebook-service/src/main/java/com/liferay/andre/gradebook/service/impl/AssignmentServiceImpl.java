@@ -96,13 +96,13 @@ public class AssignmentServiceImpl extends AssignmentServiceBaseImpl {
 				groupId, keywords);
 	}
 	public Assignment updateAssignment(
-			long assignmentId, Map<Locale, String> titleMap, Map<Locale, String> descriptio
-Date dueDate, ServiceContext serviceContext)throws PortalException {
+			long assignmentId, Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			Date dueDate, ServiceContext serviceContext)throws PortalException {
 // Check permissions.
 		_assignmentModelResourcePermission.check(
 				getPermissionChecker(), assignmentId, ActionKeys.UPDATE);
 		return assignmentLocalService.updateAssignment(
-				assignmentId, titleMap, descriptionMap, dueDate, serviceContext);
+				assignmentId, titleMap, descriptionMap.toString(), dueDate, serviceContext);
 	}
 	@Reference(
 			policy = ReferencePolicy.DYNAMIC,

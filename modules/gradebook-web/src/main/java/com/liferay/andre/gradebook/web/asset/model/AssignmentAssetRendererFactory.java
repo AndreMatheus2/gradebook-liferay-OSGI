@@ -66,8 +66,8 @@ public class AssignmentAssetRendererFactory
             LiferayPortletResponse liferayPortletResponse, long classTypeId) {
         PortletURL portletURL = _portal.getControlPanelPortletURL(
                 liferayPortletRequest, getGroup(liferayPortletRequest),
-                GradebookPortletKeys.Gradebook, 0, 0, PortletRequest.RENDER_PHASE);
-        portletURL.setParameter("mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT
+                GradebookPortletKeys.GRADEBOOK, 0, 0, PortletRequest.RENDER_PHASE);
+        portletURL.setParameter("mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT);
         return portletURL;
     }
     @Override

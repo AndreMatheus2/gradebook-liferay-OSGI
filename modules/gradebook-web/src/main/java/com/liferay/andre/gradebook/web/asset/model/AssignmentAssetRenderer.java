@@ -22,13 +22,14 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.andre.gradebook.model.Assignment;
 import com.liferay.andre.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.andre.gradebook.web.constants.MVCCommandNames;
-import com.liferay.andre.gradebook.web.internal.security.permission.resource.AssignmentPermi
+import com.liferay.andre.gradebook.web.internal.security.permission.resource.AssignmentPermission;
 import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowState;
-import javax.servlet.http.HttpServletRequest;import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 /**
  * Asset renderer for assignments.
  *
@@ -49,7 +50,7 @@ public class AssignmentAssetRenderer extends BaseJSPAssetRenderer<Assignment> {
     }
     @Override
     public long getClassPK() {
-        return _assignment.getAssignmentId();
+        return _assignment.getAssignment();
     }
     @Override
     public long getGroupId() {return _assignment.getGroupId();
@@ -98,7 +99,7 @@ public class AssignmentAssetRenderer extends BaseJSPAssetRenderer<Assignment> {
                 PortletRequest.RENDER_PHASE);
         portletURL.setParameter(
                 "mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT);portletURL.setParameter(
-                "assignmentId", String.valueOf(_assignment.getAssignmentId()));
+                "assignmentId", String.valueOf(_assignment.getAssignment()));
         portletURL.setParameter("showback", Boolean.FALSE.toString());
         return portletURL;
     }
@@ -140,14 +141,14 @@ public class AssignmentAssetRenderer extends BaseJSPAssetRenderer<Assignment> {
                 portletURL =
                         PortletURLFactoryUtil.getPortletURLFactory(
                         ).create(
-                                liferayPortletRequest, GradebookPortletKeys.Gra
+                                liferayPortletRequest, GradebookPortletKeys.GRADEBOOK,
                                 plid, PortletRequest.RENDER_PHASE
                         );
             }
             portletURL.setParameter(
                     "mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENT);
             portletURL.setParameter(
-                    "assignmentId", String.valueOf(_assignment.getAssignmentId()));String currentUrl = PortalUtil.getCurrentURL(
+                    "assignmentId", String.valueOf(_assignment.getAssignment()));String currentUrl = PortalUtil.getCurrentURL(
                     liferayPortletRequest
             );
             portletURL.setParameter("redirect", currentUrl);
@@ -171,7 +172,8 @@ public class AssignmentAssetRenderer extends BaseJSPAssetRenderer<Assignment> {
     public String getUuid() {
         return _assignment.getUserUuid();
     }
-    @Overridepublic boolean hasEditPermission(PermissionChecker permissionChecker)
+    @Override
+    public boolean hasEditPermission(PermissionChecker permissionChecker)
             throws PortalException {
         return AssignmentPermission.contains(
                 permissionChecker, _assignment, ActionKeys.UPDATE);

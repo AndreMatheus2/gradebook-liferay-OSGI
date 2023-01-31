@@ -8,10 +8,13 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.andre.gradebook.model.Assignment;
-import java.util.Locale;import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Component;
+
+import java.util.Locale;
+
 @Component(
         immediate = true,
-        property = "indexer.class.name=com.liferay.training.gradebook.model.Assignment",
+        property = "indexer.class.name=com.liferay.andre.gradebook.model.Assignment",
         service = ModelDocumentContributor.class
 )
 public class AssignmentModelDocumentContributor
@@ -19,9 +22,9 @@ public class AssignmentModelDocumentContributor
     @Override
     public void contribute(Document document, Assignment assignment) {
 // Strip HTML.
-        String description = HtmlUtil.extractText(assignment.getDescription());
+        String description = HtmlUtil.escape(assignment.getDescription());
         document.addText(Field.DESCRIPTION, description);
-        String title = HtmlUtil.extractText(assignment.getTitle());
+        String title = HtmlUtil.escape(assignment.getTitle());
         document.addText(Field.TITLE, title);
         document.addDate(Field.MODIFIED_DATE, assignment.getModifiedDate());
 // Handle localized fields.

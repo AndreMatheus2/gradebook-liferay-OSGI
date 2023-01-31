@@ -12,6 +12,7 @@
  * details.
  */
 package com.liferay.andre.gradebook.service.impl;
+
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.Disjunction;import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -20,6 +21,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.andre.gradebook.model.Assignment;
@@ -57,10 +59,10 @@ public class AssignmentLocalServiceImpl extends AssignmentLocalServiceBaseImpl {
 
 	public Assignment addAssignment(
 			long groupId, Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
-Date dueDate, ServiceContext serviceContext)
+			Date dueDate, ServiceContext serviceContext)
 			throws PortalException {
 // Validate assignment parameters.
-		_assignmentValidator.validate(titleMap, descriptionMap, dueDate);
+		_assignmentValidator.validate(titleMap, descriptionMap.toString(), dueDate);
 // Get group and user.
 		Group group = groupLocalService.getGroup(groupId);
 		long userId = serviceContext.getUserId();
@@ -73,7 +75,8 @@ Date dueDate, ServiceContext serviceContext)
 // Populate fields.
 		assignment.setCompanyId(group.getCompanyId());
 		assignment.setCreateDate(serviceContext.getCreateDate(new Date()));
-		assignment.setDueDate(dueDate);assignment.setDescriptionMap(descriptionMap);
+		assignment.setDueDate(dueDate);
+		assignment.setDescription(descriptionMap.toString());
 		assignment.setGroupId(groupId);
 		assignment.setModifiedDate(serviceContext.getModifiedDate(new Date()));
 		assignment.setTitleMap(titleMap);
@@ -87,16 +90,16 @@ Date dueDate, ServiceContext serviceContext)
 		boolean addGuestPermissions = true;
 		resourceLocalService.addResources(
 				group.getCompanyId(), groupId, userId, Assignment.class.getName(),
-				assignment.getAssignmentId(), portletActions, addGroupPermissions,
+				assignment.getAssignment(), portletActions, addGroupPermissions,
 				addGuestPermissions);
 		// Update asset resources.
 		updateAsset(assignment, serviceContext);
 		return assignment;
 	}
 	public Assignment updateAssignment(long assignmentId, Map<Locale, String> titleMap,
-									   String description, Date dueDate, ServiceContext serviceContext) throws PortalExceptio {
+									   String description, Date dueDate, ServiceContext serviceContext) throws PortalException {
 // Validate assignment parameters.
-_assignmentValidator.validate(titleMap, description, dueDate);
+	_assignmentValidator.validate(titleMap, description, dueDate);
 	// Get the Assignment by id.
 	Assignment assignment = getAssignment(assignmentId);
 // Set updated fields and modification date.
@@ -151,7 +154,7 @@ assignment.setDescription(description);
 		assetEntryLocalService.updateEntry(
 				serviceContext.getUserId(), serviceContext.getScopeGroupId(),
 				assignment.getCreateDate(), assignment.getModifiedDate(),
-				Assignment.class.getName(), assignment.getAssignmentId(),
+				Assignment.class.getName(), assignment.getAssignment(),
 				assignment.getUserUuid(), 0, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames(), true, true,
 				assignment.getCreateDate(), null, null, null,
@@ -168,7 +171,7 @@ assignment.setDescription(description);
 // Delete the Assignment
 		// Delete the Asset resource.
 		assetEntryLocalService.deleteEntry(
-				Assignment.class.getName(), assignment.getAssignmentId());
+				Assignment.class.getName(), assignment.getAssignment());
 		return super.deleteAssignment(assignment);
 	}
 	@Override

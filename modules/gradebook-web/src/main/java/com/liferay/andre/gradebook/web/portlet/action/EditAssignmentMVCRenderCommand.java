@@ -35,16 +35,8 @@ public class EditAssignmentMVCRenderCommand implements MVCRenderCommand {
         Assignment assignment = null;
         long assignmentId = ParamUtil.getLong(renderRequest, "assignmentId", 0);
         if (assignmentId > 0) {
-            try {
-// Call the service to get the assignment for editing.
-                assignment = _assignmentService.getAssignment(assignmentId);
-            }
-            catch (NoSuchAssignmentException nsae) {
-                nsae.printStackTrace();
-            }
-            catch (PortalException pe) {
-                pe.printStackTrace();
-            }
+            // Call the service to get the assignment for editing.
+            assignment = _assignmentService.getAssignment(assignmentId);
         }
         ThemeDisplay themeDisplay =
                 (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);

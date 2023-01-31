@@ -22,7 +22,7 @@ public class AssignmentSearchRegistrar {
                 modelSearchDefinition.setDefaultSelectedFieldNames(
                         Field.ASSET_TAG_NAMES, Field.COMPANY_ID,
                         Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
-                        Field.GROUP_ID, Field.MODIFIED_DATE, Field.SCOPE_GROUP_
+                        Field.GROUP_ID, Field.MODIFIED_DATE, Field.SCOPE_GROUP_ID,
                         Field.UID);
                 modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
                         Field.DESCRIPTION, Field.TITLE);
@@ -39,9 +39,9 @@ public class AssignmentSearchRegistrar {
     @Reference(
             target = "(indexer.class.name=com.liferay.training.gradebook.model.Assignment)"
     )
-    protected ModelIndexerWriterContributor<Assignment>
-            modelIndexWriterContributor;
-    @Referenceprotected ModelSearchRegistrarHelper modelSearchRegistrarHelper;
+    protected ModelIndexerWriterContributor<Assignment> modelIndexWriterContributor;
+    @Reference
+    protected ModelSearchRegistrarHelper modelSearchRegistrarHelper;
     @Reference(
             target = "(indexer.class.name=com.liferay.training.gradebook.model.Assignment)"
     )

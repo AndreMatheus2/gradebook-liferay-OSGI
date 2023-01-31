@@ -14,6 +14,7 @@
 
 package com.liferay.andre.gradebook.model;
 
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.wrapper.BaseModelWrapper;
 
@@ -42,8 +43,9 @@ public class AssignmentWrapper
 	public Map<String, Object> getModelAttributes() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		attributes.put("assignment", getAssignment());
-		attributes.put("GroupId", getGroupId());
+		attributes.put("uuid", getUuid());
+		attributes.put("assignmentId", getAssignmentId());
+		attributes.put("groupId", getGroupId());
 		attributes.put("companyId", getCompanyId());
 		attributes.put("userId", getUserId());
 		attributes.put("userName", getUserName());
@@ -51,6 +53,10 @@ public class AssignmentWrapper
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("description", getDescription());
 		attributes.put("dueDate", getDueDate());
+		attributes.put("status", getStatus());
+		attributes.put("statusByUserId", getStatusByUserId());
+		attributes.put("statusByUserName", getStatusByUserName());
+		attributes.put("statusDate", getStatusDate());
 		attributes.put("title", getTitle());
 
 		return attributes;
@@ -58,16 +64,22 @@ public class AssignmentWrapper
 
 	@Override
 	public void setModelAttributes(Map<String, Object> attributes) {
-		Long assignment = (Long)attributes.get("assignment");
+		String uuid = (String)attributes.get("uuid");
 
-		if (assignment != null) {
-			setAssignment(assignment);
+		if (uuid != null) {
+			setUuid(uuid);
 		}
 
-		Long GroupId = (Long)attributes.get("GroupId");
+		Long assignmentId = (Long)attributes.get("assignmentId");
 
-		if (GroupId != null) {
-			setGroupId(GroupId);
+		if (assignmentId != null) {
+			setAssignmentId(assignmentId);
+		}
+
+		Long groupId = (Long)attributes.get("groupId");
+
+		if (groupId != null) {
+			setGroupId(groupId);
 		}
 
 		Long companyId = (Long)attributes.get("companyId");
@@ -112,6 +124,30 @@ public class AssignmentWrapper
 			setDueDate(dueDate);
 		}
 
+		Integer status = (Integer)attributes.get("status");
+
+		if (status != null) {
+			setStatus(status);
+		}
+
+		Long statusByUserId = (Long)attributes.get("statusByUserId");
+
+		if (statusByUserId != null) {
+			setStatusByUserId(statusByUserId);
+		}
+
+		String statusByUserName = (String)attributes.get("statusByUserName");
+
+		if (statusByUserName != null) {
+			setStatusByUserName(statusByUserName);
+		}
+
+		Date statusDate = (Date)attributes.get("statusDate");
+
+		if (statusDate != null) {
+			setStatusDate(statusDate);
+		}
+
 		String title = (String)attributes.get("title");
 
 		if (title != null) {
@@ -119,19 +155,14 @@ public class AssignmentWrapper
 		}
 	}
 
-	@Override
-	public Assignment cloneWithOriginalValues() {
-		return wrap(model.cloneWithOriginalValues());
-	}
-
 	/**
-	 * Returns the assignment of this assignment.
+	 * Returns the assignment ID of this assignment.
 	 *
-	 * @return the assignment of this assignment
+	 * @return the assignment ID of this assignment
 	 */
 	@Override
-	public long getAssignment() {
-		return model.getAssignment();
+	public long getAssignmentId() {
+		return model.getAssignmentId();
 	}
 
 	@Override
@@ -175,6 +206,72 @@ public class AssignmentWrapper
 	}
 
 	/**
+	 * Returns the localized description of this assignment in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized description of this assignment
+	 */
+	@Override
+	public String getDescription(java.util.Locale locale) {
+		return model.getDescription(locale);
+	}
+
+	/**
+	 * Returns the localized description of this assignment in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized description of this assignment. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@Override
+	public String getDescription(java.util.Locale locale, boolean useDefault) {
+		return model.getDescription(locale, useDefault);
+	}
+
+	/**
+	 * Returns the localized description of this assignment in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized description of this assignment
+	 */
+	@Override
+	public String getDescription(String languageId) {
+		return model.getDescription(languageId);
+	}
+
+	/**
+	 * Returns the localized description of this assignment in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized description of this assignment
+	 */
+	@Override
+	public String getDescription(String languageId, boolean useDefault) {
+		return model.getDescription(languageId, useDefault);
+	}
+
+	@Override
+	public String getDescriptionCurrentLanguageId() {
+		return model.getDescriptionCurrentLanguageId();
+	}
+
+	@Override
+	public String getDescriptionCurrentValue() {
+		return model.getDescriptionCurrentValue();
+	}
+
+	/**
+	 * Returns a map of the locales and localized descriptions of this assignment.
+	 *
+	 * @return the locales and localized descriptions of this assignment
+	 */
+	@Override
+	public Map<java.util.Locale, String> getDescriptionMap() {
+		return model.getDescriptionMap();
+	}
+
+	/**
 	 * Returns the due date of this assignment.
 	 *
 	 * @return the due date of this assignment
@@ -212,6 +309,56 @@ public class AssignmentWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
+	}
+
+	/**
+	 * Returns the status of this assignment.
+	 *
+	 * @return the status of this assignment
+	 */
+	@Override
+	public int getStatus() {
+		return model.getStatus();
+	}
+
+	/**
+	 * Returns the status by user ID of this assignment.
+	 *
+	 * @return the status by user ID of this assignment
+	 */
+	@Override
+	public long getStatusByUserId() {
+		return model.getStatusByUserId();
+	}
+
+	/**
+	 * Returns the status by user name of this assignment.
+	 *
+	 * @return the status by user name of this assignment
+	 */
+	@Override
+	public String getStatusByUserName() {
+		return model.getStatusByUserName();
+	}
+
+	/**
+	 * Returns the status by user uuid of this assignment.
+	 *
+	 * @return the status by user uuid of this assignment
+	 */
+	@Override
+	public String getStatusByUserUuid() {
+		return model.getStatusByUserUuid();
+	}
+
+	/**
+	 * Returns the status date of this assignment.
+	 *
+	 * @return the status date of this assignment
+	 */
+	@Override
+	public Date getStatusDate() {
+		return model.getStatusDate();
 	}
 
 	/**
@@ -320,6 +467,96 @@ public class AssignmentWrapper
 		return model.getUserUuid();
 	}
 
+	/**
+	 * Returns the uuid of this assignment.
+	 *
+	 * @return the uuid of this assignment
+	 */
+	@Override
+	public String getUuid() {
+		return model.getUuid();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is approved.
+	 *
+	 * @return <code>true</code> if this assignment is approved; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isApproved() {
+		return model.isApproved();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is denied.
+	 *
+	 * @return <code>true</code> if this assignment is denied; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDenied() {
+		return model.isDenied();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is a draft.
+	 *
+	 * @return <code>true</code> if this assignment is a draft; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDraft() {
+		return model.isDraft();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is expired.
+	 *
+	 * @return <code>true</code> if this assignment is expired; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isExpired() {
+		return model.isExpired();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is inactive.
+	 *
+	 * @return <code>true</code> if this assignment is inactive; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInactive() {
+		return model.isInactive();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is incomplete.
+	 *
+	 * @return <code>true</code> if this assignment is incomplete; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isIncomplete() {
+		return model.isIncomplete();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is pending.
+	 *
+	 * @return <code>true</code> if this assignment is pending; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isPending() {
+		return model.isPending();
+	}
+
+	/**
+	 * Returns <code>true</code> if this assignment is scheduled.
+	 *
+	 * @return <code>true</code> if this assignment is scheduled; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isScheduled() {
+		return model.isScheduled();
+	}
+
 	@Override
 	public void persist() {
 		model.persist();
@@ -341,13 +578,13 @@ public class AssignmentWrapper
 	}
 
 	/**
-	 * Sets the assignment of this assignment.
+	 * Sets the assignment ID of this assignment.
 	 *
-	 * @param assignment the assignment of this assignment
+	 * @param assignmentId the assignment ID of this assignment
 	 */
 	@Override
-	public void setAssignment(long assignment) {
-		model.setAssignment(assignment);
+	public void setAssignmentId(long assignmentId) {
+		model.setAssignmentId(assignmentId);
 	}
 
 	/**
@@ -381,6 +618,63 @@ public class AssignmentWrapper
 	}
 
 	/**
+	 * Sets the localized description of this assignment in the language.
+	 *
+	 * @param description the localized description of this assignment
+	 * @param locale the locale of the language
+	 */
+	@Override
+	public void setDescription(String description, java.util.Locale locale) {
+		model.setDescription(description, locale);
+	}
+
+	/**
+	 * Sets the localized description of this assignment in the language, and sets the default locale.
+	 *
+	 * @param description the localized description of this assignment
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	@Override
+	public void setDescription(
+		String description, java.util.Locale locale,
+		java.util.Locale defaultLocale) {
+
+		model.setDescription(description, locale, defaultLocale);
+	}
+
+	@Override
+	public void setDescriptionCurrentLanguageId(String languageId) {
+		model.setDescriptionCurrentLanguageId(languageId);
+	}
+
+	/**
+	 * Sets the localized descriptions of this assignment from the map of locales and localized descriptions.
+	 *
+	 * @param descriptionMap the locales and localized descriptions of this assignment
+	 */
+	@Override
+	public void setDescriptionMap(
+		Map<java.util.Locale, String> descriptionMap) {
+
+		model.setDescriptionMap(descriptionMap);
+	}
+
+	/**
+	 * Sets the localized descriptions of this assignment from the map of locales and localized descriptions, and sets the default locale.
+	 *
+	 * @param descriptionMap the locales and localized descriptions of this assignment
+	 * @param defaultLocale the default locale
+	 */
+	@Override
+	public void setDescriptionMap(
+		Map<java.util.Locale, String> descriptionMap,
+		java.util.Locale defaultLocale) {
+
+		model.setDescriptionMap(descriptionMap, defaultLocale);
+	}
+
+	/**
 	 * Sets the due date of this assignment.
 	 *
 	 * @param dueDate the due date of this assignment
@@ -393,11 +687,11 @@ public class AssignmentWrapper
 	/**
 	 * Sets the group ID of this assignment.
 	 *
-	 * @param GroupId the group ID of this assignment
+	 * @param groupId the group ID of this assignment
 	 */
 	@Override
-	public void setGroupId(long GroupId) {
-		model.setGroupId(GroupId);
+	public void setGroupId(long groupId) {
+		model.setGroupId(groupId);
 	}
 
 	/**
@@ -418,6 +712,56 @@ public class AssignmentWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the status of this assignment.
+	 *
+	 * @param status the status of this assignment
+	 */
+	@Override
+	public void setStatus(int status) {
+		model.setStatus(status);
+	}
+
+	/**
+	 * Sets the status by user ID of this assignment.
+	 *
+	 * @param statusByUserId the status by user ID of this assignment
+	 */
+	@Override
+	public void setStatusByUserId(long statusByUserId) {
+		model.setStatusByUserId(statusByUserId);
+	}
+
+	/**
+	 * Sets the status by user name of this assignment.
+	 *
+	 * @param statusByUserName the status by user name of this assignment
+	 */
+	@Override
+	public void setStatusByUserName(String statusByUserName) {
+		model.setStatusByUserName(statusByUserName);
+	}
+
+	/**
+	 * Sets the status by user uuid of this assignment.
+	 *
+	 * @param statusByUserUuid the status by user uuid of this assignment
+	 */
+	@Override
+	public void setStatusByUserUuid(String statusByUserUuid) {
+		model.setStatusByUserUuid(statusByUserUuid);
+	}
+
+	/**
+	 * Sets the status date of this assignment.
+	 *
+	 * @param statusDate the status date of this assignment
+	 */
+	@Override
+	public void setStatusDate(Date statusDate) {
+		model.setStatusDate(statusDate);
 	}
 
 	/**
@@ -512,6 +856,21 @@ public class AssignmentWrapper
 	@Override
 	public void setUserUuid(String userUuid) {
 		model.setUserUuid(userUuid);
+	}
+
+	/**
+	 * Sets the uuid of this assignment.
+	 *
+	 * @param uuid the uuid of this assignment
+	 */
+	@Override
+	public void setUuid(String uuid) {
+		model.setUuid(uuid);
+	}
+
+	@Override
+	public StagedModelType getStagedModelType() {
+		return model.getStagedModelType();
 	}
 
 	@Override

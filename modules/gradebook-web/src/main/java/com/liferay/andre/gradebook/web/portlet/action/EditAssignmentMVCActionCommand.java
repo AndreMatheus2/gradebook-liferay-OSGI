@@ -10,7 +10,8 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.andre.gradebook.exception.AssignmentValidationException;
 import com.liferay.andre.gradebook.model.Assignment;
-import com.liferay.andre.gradebook.service.AssignmentService;import com.liferay.training.gradebook.web.constants.GradebookPortletKeys;
+import com.liferay.andre.gradebook.service.AssignmentService;
+import com.liferay.andre.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.andre.gradebook.web.constants.MVCCommandNames;
 import java.util.Date;
 import java.util.Locale;
@@ -38,7 +39,7 @@ public class EditAssignmentMVCActionCommand extends BaseMVCActionCommand {
     protected void doProcessAction(
             ActionRequest actionRequest, ActionResponse actionResponse)throws Exception {
         ServiceContext serviceContext =
-                ServiceContextFactory.getInstance(Assignment.class.getName(), actionReq
+                ServiceContextFactory.getInstance(Assignment.class.getName(), actionRequest);
 // Get parameters from the request.
         long assignmentId = ParamUtil.getLong(actionRequest, "assignmentId");
 // Use LocalizationUtil to get a localized parameter.
@@ -46,21 +47,10 @@ public class EditAssignmentMVCActionCommand extends BaseMVCActionCommand {
                 LocalizationUtil.getLocalizationMap(actionRequest, "title");
         String description = ParamUtil.getString(actionRequest, "description", null);
         Date dueDate = ParamUtil.getDate(actionRequest, "dueDate", null);
-        try {
-// Call the service to update the assignment
-            _assignmentService.updateAssignment(
-                    assignmentId, titleMap, description, dueDate, serviceContext);
-            sendRedirect(actionRequest, actionResponse);
-        }
-        catch (AssignmentValidationException ave) {
-            ave.printStackTrace();
-            actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT);
-        }
-        catch (PortalException pe) {
-            pe.printStackTrace();
-            actionResponse.setRenderParameter(
-                    "mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT);
-        }
+        // Call the service to update the assignment
+        _assignmentService.updateAssignment(
+                assignmentId, titleMap, description, dueDate, serviceContext);
+        sendRedirect(actionRequest, actionResponse);
     }
     @Reference
     protected AssignmentService _assignmentService;

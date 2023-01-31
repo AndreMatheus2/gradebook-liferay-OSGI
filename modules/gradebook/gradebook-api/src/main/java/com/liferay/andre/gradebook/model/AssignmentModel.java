@@ -16,10 +16,12 @@ package com.liferay.andre.gradebook.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.LocaleException;
-import com.liferay.portal.kernel.model.AuditedModel;
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.LocalizedModel;
 import com.liferay.portal.kernel.model.ShardedModel;
+import com.liferay.portal.kernel.model.StagedAuditedModel;
+import com.liferay.portal.kernel.model.WorkflowedModel;
 
 import java.util.Date;
 import java.util.Locale;
@@ -40,7 +42,8 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface AssignmentModel
-	extends AuditedModel, BaseModel<Assignment>, LocalizedModel, ShardedModel {
+	extends BaseModel<Assignment>, GroupedModel, LocalizedModel, ShardedModel,
+			StagedAuditedModel, WorkflowedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -63,32 +66,51 @@ public interface AssignmentModel
 	public void setPrimaryKey(long primaryKey);
 
 	/**
-	 * Returns the assignment of this assignment.
+	 * Returns the uuid of this assignment.
 	 *
-	 * @return the assignment of this assignment
+	 * @return the uuid of this assignment
 	 */
-	public long getAssignment();
+	@AutoEscape
+	@Override
+	public String getUuid();
 
 	/**
-	 * Sets the assignment of this assignment.
+	 * Sets the uuid of this assignment.
 	 *
-	 * @param assignment the assignment of this assignment
+	 * @param uuid the uuid of this assignment
 	 */
-	public void setAssignment(long assignment);
+	@Override
+	public void setUuid(String uuid);
+
+	/**
+	 * Returns the assignment ID of this assignment.
+	 *
+	 * @return the assignment ID of this assignment
+	 */
+	public long getAssignmentId();
+
+	/**
+	 * Sets the assignment ID of this assignment.
+	 *
+	 * @param assignmentId the assignment ID of this assignment
+	 */
+	public void setAssignmentId(long assignmentId);
 
 	/**
 	 * Returns the group ID of this assignment.
 	 *
 	 * @return the group ID of this assignment
 	 */
+	@Override
 	public long getGroupId();
 
 	/**
 	 * Sets the group ID of this assignment.
 	 *
-	 * @param GroupId the group ID of this assignment
+	 * @param groupId the group ID of this assignment
 	 */
-	public void setGroupId(long GroupId);
+	@Override
+	public void setGroupId(long groupId);
 
 	/**
 	 * Returns the company ID of this assignment.
@@ -192,8 +214,58 @@ public interface AssignmentModel
 	 *
 	 * @return the description of this assignment
 	 */
-	@AutoEscape
 	public String getDescription();
+
+	/**
+	 * Returns the localized description of this assignment in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized description of this assignment
+	 */
+	@AutoEscape
+	public String getDescription(Locale locale);
+
+	/**
+	 * Returns the localized description of this assignment in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized description of this assignment. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@AutoEscape
+	public String getDescription(Locale locale, boolean useDefault);
+
+	/**
+	 * Returns the localized description of this assignment in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized description of this assignment
+	 */
+	@AutoEscape
+	public String getDescription(String languageId);
+
+	/**
+	 * Returns the localized description of this assignment in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized description of this assignment
+	 */
+	@AutoEscape
+	public String getDescription(String languageId, boolean useDefault);
+
+	@AutoEscape
+	public String getDescriptionCurrentLanguageId();
+
+	@AutoEscape
+	public String getDescriptionCurrentValue();
+
+	/**
+	 * Returns a map of the locales and localized descriptions of this assignment.
+	 *
+	 * @return the locales and localized descriptions of this assignment
+	 */
+	public Map<Locale, String> getDescriptionMap();
 
 	/**
 	 * Sets the description of this assignment.
@@ -201,6 +273,42 @@ public interface AssignmentModel
 	 * @param description the description of this assignment
 	 */
 	public void setDescription(String description);
+
+	/**
+	 * Sets the localized description of this assignment in the language.
+	 *
+	 * @param description the localized description of this assignment
+	 * @param locale the locale of the language
+	 */
+	public void setDescription(String description, Locale locale);
+
+	/**
+	 * Sets the localized description of this assignment in the language, and sets the default locale.
+	 *
+	 * @param description the localized description of this assignment
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	public void setDescription(
+		String description, Locale locale, Locale defaultLocale);
+
+	public void setDescriptionCurrentLanguageId(String languageId);
+
+	/**
+	 * Sets the localized descriptions of this assignment from the map of locales and localized descriptions.
+	 *
+	 * @param descriptionMap the locales and localized descriptions of this assignment
+	 */
+	public void setDescriptionMap(Map<Locale, String> descriptionMap);
+
+	/**
+	 * Sets the localized descriptions of this assignment from the map of locales and localized descriptions, and sets the default locale.
+	 *
+	 * @param descriptionMap the locales and localized descriptions of this assignment
+	 * @param defaultLocale the default locale
+	 */
+	public void setDescriptionMap(
+		Map<Locale, String> descriptionMap, Locale defaultLocale);
 
 	/**
 	 * Returns the due date of this assignment.
@@ -215,6 +323,87 @@ public interface AssignmentModel
 	 * @param dueDate the due date of this assignment
 	 */
 	public void setDueDate(Date dueDate);
+
+	/**
+	 * Returns the status of this assignment.
+	 *
+	 * @return the status of this assignment
+	 */
+	@Override
+	public int getStatus();
+
+	/**
+	 * Sets the status of this assignment.
+	 *
+	 * @param status the status of this assignment
+	 */
+	@Override
+	public void setStatus(int status);
+
+	/**
+	 * Returns the status by user ID of this assignment.
+	 *
+	 * @return the status by user ID of this assignment
+	 */
+	@Override
+	public long getStatusByUserId();
+
+	/**
+	 * Sets the status by user ID of this assignment.
+	 *
+	 * @param statusByUserId the status by user ID of this assignment
+	 */
+	@Override
+	public void setStatusByUserId(long statusByUserId);
+
+	/**
+	 * Returns the status by user uuid of this assignment.
+	 *
+	 * @return the status by user uuid of this assignment
+	 */
+	@Override
+	public String getStatusByUserUuid();
+
+	/**
+	 * Sets the status by user uuid of this assignment.
+	 *
+	 * @param statusByUserUuid the status by user uuid of this assignment
+	 */
+	@Override
+	public void setStatusByUserUuid(String statusByUserUuid);
+
+	/**
+	 * Returns the status by user name of this assignment.
+	 *
+	 * @return the status by user name of this assignment
+	 */
+	@AutoEscape
+	@Override
+	public String getStatusByUserName();
+
+	/**
+	 * Sets the status by user name of this assignment.
+	 *
+	 * @param statusByUserName the status by user name of this assignment
+	 */
+	@Override
+	public void setStatusByUserName(String statusByUserName);
+
+	/**
+	 * Returns the status date of this assignment.
+	 *
+	 * @return the status date of this assignment
+	 */
+	@Override
+	public Date getStatusDate();
+
+	/**
+	 * Sets the status date of this assignment.
+	 *
+	 * @param statusDate the status date of this assignment
+	 */
+	@Override
+	public void setStatusDate(Date statusDate);
 
 	/**
 	 * Returns the title of this assignment.
@@ -315,6 +504,70 @@ public interface AssignmentModel
 	 */
 	public void setTitleMap(Map<Locale, String> titleMap, Locale defaultLocale);
 
+	/**
+	 * Returns <code>true</code> if this assignment is approved.
+	 *
+	 * @return <code>true</code> if this assignment is approved; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isApproved();
+
+	/**
+	 * Returns <code>true</code> if this assignment is denied.
+	 *
+	 * @return <code>true</code> if this assignment is denied; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDenied();
+
+	/**
+	 * Returns <code>true</code> if this assignment is a draft.
+	 *
+	 * @return <code>true</code> if this assignment is a draft; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDraft();
+
+	/**
+	 * Returns <code>true</code> if this assignment is expired.
+	 *
+	 * @return <code>true</code> if this assignment is expired; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isExpired();
+
+	/**
+	 * Returns <code>true</code> if this assignment is inactive.
+	 *
+	 * @return <code>true</code> if this assignment is inactive; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInactive();
+
+	/**
+	 * Returns <code>true</code> if this assignment is incomplete.
+	 *
+	 * @return <code>true</code> if this assignment is incomplete; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isIncomplete();
+
+	/**
+	 * Returns <code>true</code> if this assignment is pending.
+	 *
+	 * @return <code>true</code> if this assignment is pending; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isPending();
+
+	/**
+	 * Returns <code>true</code> if this assignment is scheduled.
+	 *
+	 * @return <code>true</code> if this assignment is scheduled; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isScheduled();
+
 	@Override
 	public String[] getAvailableLanguageIds();
 
@@ -327,8 +580,5 @@ public interface AssignmentModel
 	@Override
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
 		throws LocaleException;
-
-	@Override
-	public Assignment cloneWithOriginalValues();
 
 }

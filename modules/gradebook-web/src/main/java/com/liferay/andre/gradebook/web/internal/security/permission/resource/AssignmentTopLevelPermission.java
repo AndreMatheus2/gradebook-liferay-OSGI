@@ -1,4 +1,4 @@
-package com.liferay.training.gradebook.web.internal.security.permission.resource;
+package com.liferay.andre.gradebook.web.internal.security.permission.resource;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.andre.gradebook.constants.GradebookConstants;
 import org.osgi.service.component.annotations.Component;

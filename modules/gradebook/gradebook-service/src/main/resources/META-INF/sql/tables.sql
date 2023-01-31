@@ -1,12 +1,17 @@
 create table Gradebook_Assignment (
-	assignment LONG not null primary key,
-	GroupId LONG,
+	uuid_ VARCHAR(75) null,
+	assignmentId LONG not null primary key,
+	groupId LONG,
 	companyId LONG,
 	userId LONG,
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	description VARCHAR(75) null,
+	description STRING null,
 	dueDate DATE null,
+	status INTEGER,
+	statusByUserId LONG,
+	statusByUserName VARCHAR(75) null,
+	statusDate DATE null,
 	title STRING null
 );

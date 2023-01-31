@@ -27,5 +27,6 @@ public class AssignmentPortletResourcePermissionDefinition
     public String getResourceName() {
         return GradebookConstants.RESOURCE_NAME;
     }
-    @Referenceprivate StagingPermission _stagingPermission;
+    @Reference
+    private StagingPermission _stagingPermission;
 }
